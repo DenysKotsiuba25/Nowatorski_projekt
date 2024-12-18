@@ -1,1 +1,1 @@
-# Lizzard Clicker!
+Telegram Bot Clicker!
