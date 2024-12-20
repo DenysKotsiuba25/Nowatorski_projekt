@@ -69,3 +69,5 @@ node_modules/
 .dataconnect
 
 dist 
+
+src/services/supabase.js
