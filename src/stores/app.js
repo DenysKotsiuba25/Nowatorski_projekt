@@ -1,5 +1,9 @@
-import { getOrCreateUser } from "@/api/app"
+import { getOrCreateUser, registerRef, fetchTasks } from "@/api/app"
 import { defineStore } from "pinia"
+import { useScoreStore } from "./score"
+import { useTelegram } from "@/services/telegram"
+
+const { user } = useTelegram()
 
 export const useAppStore = defineStore('app', {
     state: () => ({
@@ -7,9 +11,22 @@ export const useAppStore = defineStore('app', {
        tasks: {}, 
     }),
     actions: {
-       async init() {
+       async init(ref) {
         this.user = await getOrCreateUser()
-        console.log('user: ', this.user)
+        
+        const score = useScoreStore()
+
+        score.setScore(this.user.score)
+        
+        if (ref && +ref !== +this.user.telegram) {
+         await registerRef(this.user?.first_name ?? "Clicker", ref)
+        }
        }, 
+       async completeTask(task) {
+         await completeTask(this.user, task)
+       },
+       async fetchTasks() {
+         this.tasks = await fetchTasks()
+       },
     },
 })
